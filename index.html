@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Edificios</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-title {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .option {
+            flex: 1;
+            min-width: 300px;
+            text-align: center;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .option:hover {
+            transform: translateY(-5px);
+        }
+        
+        .option i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #4a6491;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #4a6491;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .btn:hover {
+            background: #2c3e50;
+        }
+        
+        .building-info {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .building-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 1rem;
+        }
+        
+        .detail-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #4a6491;
+        }
+        
+        #map {
+            height: 300px;
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 1rem;
+            background: #eaeaea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .result-list {
+            margin-top: 1rem;
+        }
+        
+        .building-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        
+        .building-item:hover {
+            background: #f8f9fa;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Gestión de Edificios</h1>
+            <p>Consulta información de edificios mediante QR</p>
+        </header>
+        
+        <div class="options">
+            <div class="option">
+                <div>📷</div>
+                <h3>Escanear código QR</h3>
+                <p>Utiliza el código QR del edificio para acceder a su información</p>
+                <a class="btn" href="escanear.html">Escanear QR</a>
+            </div>
+
+            <div class="options">
+                <div class="option">
+                    <h3>Testin fields</h3>
+                    <p>making use of the proto</p>
+                    <a class="btn" href="page2.html">Escanear QR</a>
+                </div>
+            
+            <div class="option" onclick="locateUser()">
+                <div>📍</div>
+                <h3>Usar geolocalización</h3>
+                <p>Encuentra edificios cercanos usando tu ubicación actual</p>
+                <button class="btn">Usar GPS</button>
+            </div>
+            
+            <div class="option" onclick="showManualSearch()">
+                <div>🔍</div>
+                <h3>Búsqueda manual</h3>
+                <p>Busca edificios por nombre, dirección o comuna</p>
+                <button class="btn">Buscar</button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title">Información del edificio</h2>
+            <div id="building-info" class="building-info">
+                <h3 id="building-name">Nombre del edificio</h3>
+                <div class="building-details">
+                    <div class="detail-card">
+                        <h4>Dirección</h4>
+                        <p id="building-address">Calle 123, Comuna</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Año de construcción</h4>
+                        <p id="building-year">2005</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Estilo arquitectónico</h4>
+                        <p id="building-style">Moderno</p>
+                    </div>
+                    <div class="detail-card">
+                        <h4>Uso</h4>
+                        <p id="building-use">Residencial</p>
+                    </div>
+                </div>
+                <div id="map">
+                    <p>🌍 Mapa mostraría la ubicación del edificio</p>
+                </div>
+            </div>
+            <div id="location-results" class="result-list"></div>
+            <div id="search-results" class="result-list"></div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Sistema de Gestión de Edificios - Desarrollado con Django</p>
+    </footer>
+
+    <script>
+        // Simulación de base de datos de edificios
+        const buildingsDatabase = [
+            {
+                id: 1,
+                name: "Edificio Colón",
+                address: "Av. Colón 123, Comuna Centro",
+                year: 1998,
+                style: "Moderno",
+                use: "Oficinas",
+                qrCode: "building_12345",
+                coordinates: { lat: -33.4489, lng: -70.6693 }
+            },
+            {
+                id: 2,
+                name: "Torque Urbano",
+                address: "Calle Mayor 456, Comuna Norte",
+                year: 2015,
+                style: "Contemporáneo",
+                use: "Residencial",
+                qrCode: "building_67890",
+                coordinates: { lat: -33.4289, lng: -70.6293 }
+            }
+        ];
+        
+    
+        
+        // Función para localizar al usuario
+        function locateUser() {
+            alert("Solicitando tu ubicación para encontrar edificios cercanos...");
+            
+            // Simular obtención de ubicación
+            setTimeout(() => {
+                const userLocation = { lat: -33.4489, lng: -70.6693 };
+                findNearbyBuildings(userLocation);
+            }, 1500);
+        }
+        
+        // Función para buscar edificios cercanos
+        function findNearbyBuildings(userLocation) {
+            document.getElementById('building-info').style.display = 'none';
+            document.getElementById('search-results').innerHTML = '';
+            
+            const resultsElement = document.getElementById('location-results');
+            resultsElement.innerHTML = '<h3>Edificios cercanos</h3>';
+            
+            buildingsDatabase.forEach(building => {
+                const distance = calculateDistance(
+                    userLocation.lat, userLocation.lng,
+                    building.coordinates.lat, building.coordinates.lng
+                );
+                
+                if (distance < 5) {
+                    const buildingElement = document.createElement('div');
+                    buildingElement.className = 'building-item';
+                    buildingElement.innerHTML = `
+                        <strong>${building.name}</strong> - ${distance.toFixed(2)} km
+                        <p>${building.address}</p>
+                    `;
+                    buildingElement.addEventListener('click', () => {
+                        displayBuildingInfo(building);
+                    });
+                    resultsElement.appendChild(buildingElement);
+                }
+            });
+            
+            if (resultsElement.children.length === 1) {
+                resultsElement.innerHTML += '<p>No se encontraron edificios cercanos</p>';
+            }
+        }
+        
+        // Función para mostrar búsqueda manual
+        function showManualSearch() {
+            const searchTerm = prompt("Ingresa el nombre, dirección o comuna para buscar:");
+            if (searchTerm) {
+                searchBuildings(searchTerm);
+            }
+        }
+        
+        // Función para buscar edificios
+        function searchBuildings(searchTerm) {
+            document.getElementById('building-info').style.display = 'none';
+            document.getElementById('location-results').innerHTML = '';
+            
+            const resultsElement = document.getElementById('search-results');
+            resultsElement.innerHTML = '<h3>Resultados de búsqueda</h3>';
+            
+            const term = searchTerm.toLowerCase();
+            let found = false;
+            
+            buildingsDatabase.forEach(building => {
+                if (building.name.toLowerCase().includes(term) || 
+                    building.address.toLowerCase().includes(term)) {
+                    
+                    found = true;
+                    const buildingElement = document.createElement('div');
+                    buildingElement.className = 'building-item';
+                    buildingElement.innerHTML = `
+                        <strong>${building.name}</strong>
+                        <p>${building.address}</p>
+                        <p>Tipo: ${building.use}</p>
+                    `;
+                    buildingElement.addEventListener('click', () => {
+                        displayBuildingInfo(building);
+                    });
+                    resultsElement.appendChild(buildingElement);
+                }
+            });
+            
+            if (!found) {
+                resultsElement.innerHTML += '<p>No se encontraron edificios que coincidan con la búsqueda</p>';
+            }
+        }
+        
+        // Función para mostrar información del edificio
+        function displayBuildingInfo(building) {
+            document.getElementById('location-results').innerHTML = '';
+            document.getElementById('search-results').innerHTML = '';
+            
+            document.getElementById('building-name').textContent = building.name;
+            document.getElementById('building-address').textContent = building.address;
+            document.getElementById('building-year').textContent = building.year;
+            document.getElementById('building-style').textContent = building.style;
+            document.getElementById('building-use').textContent = building.use;
+            
+            document.getElementById('building-info').style.display = 'block';
+            
+            document.getElementById('map').innerHTML = `
+                <div style="padding: 20px; text-align: center;">
+                    <p>🌍 Mapa mostraría la ubicación de ${building.name}</p>
+                    <p>Coordenadas: ${building.coordinates.lat}, ${building.coordinates.lng}</p>
+                </div>
+            `;
+        }
+        
+        // Función para calcular distancia (simulada)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            return Math.abs(lat1 - lat2) * 110 + Math.abs(lon1 - lon2) * 90;
+        }
+    </script>
+</body>
+</html>
