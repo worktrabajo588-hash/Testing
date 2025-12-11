@@ -119,14 +119,7 @@ APPEND_SLASH = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
-# Permite que la aplicación funcione en el dominio de Vercel
-CSRF_TRUSTED_ORIGINS = [
-    'https://testing-jdihg1e06-worktrabajo588-hashs-projects.vercel.app',
-    'https://*.vercel.app' # Para cubrir futuros despliegues
-]
 
-# Si estás usando dominios personalizados, añádelos aquí también
-ALLOWED_HOSTS = ['*'] # Usar * es común en entornos serverless como Vercel
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
