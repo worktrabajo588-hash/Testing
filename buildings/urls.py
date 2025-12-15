@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     # Rutas de la aplicación 'buildings'
+    path('', views.index, name='index'),
     path('escanear/', views.escanear, name='escanear'),
     path('page2/', views.page2, name='page2'),
     path('building/<int:building_id>/', views.building_detail, name='building_detail'),
