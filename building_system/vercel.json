@@ -3,11 +3,15 @@
     "builds": [
     {
         "src": "building_system/wsgi.py",
-        "use": "@vercel/python",
-        "config": { "runtime": "python3.11" }
+        "use": "@vercel/python"
     }
     ],
     "routes": [
+    {
+        "src": "/static/(.*)",
+        "dest": "staticfiles/$1"
+    },
+    
     { 
         "src": "/(.*[^/])", 
         "status": 308, 

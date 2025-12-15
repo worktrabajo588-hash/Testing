@@ -23,11 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-yw8^naz_bq9&_=og#c2dso9c57#z1f9q@fszu(7=r_lg$*mxiz"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
+APPEND_SLASH = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -112,12 +111,17 @@ USE_I18N = True
 
 USE_TZ = True
 
-APPEND_SLASH = True
+# Directorio donde Django recolectará todos los archivos estáticos
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
+
+# Opcional, solo si usas archivos de usuario (subidos)
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
