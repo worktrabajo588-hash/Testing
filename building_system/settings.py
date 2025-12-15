@@ -112,7 +112,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Configuración crucial para el despliegue en producción (Vercel)
 APPEND_SLASH = True
 
 # Static files (CSS, JavaScript, Images)
