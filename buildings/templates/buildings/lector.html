@@ -1,0 +1,57 @@
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <title>Medilector Sanitario</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        } ,
+        {    
+        background: #e3eaf7;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+    
+    .option:hover {
+        transform: translateY(-5px);
+    }
+    
+    .option img {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+    }
+    
+    .option-title {
+        font-size: 1.2rem;
+        color: #2c3e50;
+    }
+</style>
+    </head>
+<body>
+<form method="post" enctype="multipart/form-data" style="margin-bottom: 20px;">
+    {% csrf_token %}
+    <input type="file" name="archivo_pdf" accept="application/pdf">
+    <button type="submit">Analizar PDF con Python</button>
+</form>
+
+{% if texto %}
+    <div style="background: #f4f4f4; padding: 20px; border-radius: 8px; white-space: pre-wrap;">
+        <h3>Texto Extraído:</h3>
+        <p>{{ texto }}</p>
+    </div>
+{% endif %}
+    
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
