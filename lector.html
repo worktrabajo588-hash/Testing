@@ -1,12 +1,15 @@
-<form method="post" enctype="multipart/form-data" style="margin-bottom: 20px;">
-    {% csrf_token %}
-    <input type="file" name="archivo_pdf" accept="application/pdf">
-    <button type="submit">Analizar PDF con Python</button>
-</form>
-
-{% if texto %}
-    <div style="background: #f4f4f4; padding: 20px; border-radius: 8px; white-space: pre-wrap;">
-        <h3>Texto Extraído:</h3>
-        <p>{{ texto }}</p>
-    </div>
-{% endif %}
+<div class="resultados-grid">
+    {% if lista_analisis %}
+        {% for item in lista_analisis %}
+        <div class="card {{ item.clase }}">
+            <h3>{{ item.nombre }}</h3>
+            <p>Valor: {{ item.valor }}</p>
+            <strong>Resultado: {{ item.estado }}</strong>
+            <p><small>{{ item.mensaje }}</small></p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>Sube un archivo para ver el análisis profesional aquí.</p>
+    {% endif %}
+</div>
+<p>Depuración: Se encontraron {{ lista_analisis|length }} resultados.</p>

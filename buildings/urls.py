@@ -9,4 +9,6 @@ urlpatterns = [
     path('page2/', views.page2, name='page2'),
     path('lector/', views.lector, name='lector'),
     path('building/<int:building_id>/', views.building_detail, name='building_detail'),
+    path('lector-pdf/', views.lector_pdf_view, name='lector_pdf'),
+
 ]
